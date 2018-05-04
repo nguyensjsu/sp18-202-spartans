@@ -7,5 +7,6 @@
  */
 public interface GameSubject
 {
-
+    public void attach(GameObserver obs);
+    public void notifyObs();
 }

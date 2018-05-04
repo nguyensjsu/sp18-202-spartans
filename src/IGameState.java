@@ -7,5 +7,5 @@
  */
 public interface IGameState
 {
-
+    public String getStateDisplay();
 }
