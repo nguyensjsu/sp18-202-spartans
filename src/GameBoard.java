@@ -7,9 +7,12 @@
  */
 
 import java.util.*;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
 
-
-public class GameBoard implements GameSubject
+public class GameBoard extends JPanel implements GameSubject
 {
     private IGameState currentState;
     private IGameState newGame;
@@ -23,17 +26,61 @@ public class GameBoard implements GameSubject
     int numMoves = 0 ;
     int maxMoves = 0;
     ArrayList<GameObserver> observers;
-
+    JButton buttons[] = new JButton[9];
+    
     /**
      * Constructor for objects of class GameBoard
      */
-    public GameBoard(IGameState aState, int max)
+    public GameBoard(int size)
     {
         // initialise instance variables
-        currentState = aState;
-        maxMoves = max;
+        newGame = new NewGame(this);
+        resume = new Resume(this);
+        player1Move = new Player1Move(this);
+        player2Move = new Player2Move(this);
+        player1Win = new Player1Win(this);
+        player2Win = new Player2Win(this);
+        tie = new Tie(this);
+        currentState = player1Move;
+        
+        maxMoves = size*size;
+        setLayout(new GridLayout(size,size));
+        initializebuttons(); 
     }
-
+    public void initializebuttons()
+    {
+        for(int i = 0; i <= 8; i++)
+        {
+            buttons[i] = new JButton();
+            buttons[i].setText("");
+            buttons[i].addActionListener(new buttonListener());
+            
+            add(buttons[i]); //adds this button to JPanel (note: no need for JPanel.add(...)
+                                //because this whole class is a JPanel already           
+        }
+    }
+    
+      private class buttonListener implements ActionListener
+    {
+          public void actionPerformed(ActionEvent e) 
+        {
+            
+            JButton buttonClicked = (JButton)e.getSource(); //get the particular button that was clicked
+            if (checkMove(buttonClicked.getText()))
+            {
+                buttonClicked.setText(((IMove)currentState).getSymbol());
+                numMoves++;
+                if (checkWin())
+                    currentState.endGame(true);
+                else if(numMoves >= maxMoves)
+                    currentState.endGame(false);
+                else
+                    currentState.switchPlayer();
+            }
+            
+        }
+    }
+    
     public void setState(GameState aState)
     {
         switch(aState)
@@ -86,19 +133,16 @@ public class GameBoard implements GameSubject
         return currentState.getStateDisplay();
     }
 
-    public boolean checkMove(int position)
+    public boolean checkMove(String currText)
     {
-        boolean result = false;
-        return result;
+        if (currText.isEmpty())
+            return true;
+        return false;
     }
 
     public boolean checkWin()
     {
         boolean result = false;
         return result;
-    }
-
-    public void placeMove(int position)
-    {
     }
 }

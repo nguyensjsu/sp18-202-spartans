@@ -19,7 +19,6 @@ public class NewGame implements IGameState
     public void switchPlayer()
     {
     }
-    
     public void endGame(boolean hasWon)
     {
     }

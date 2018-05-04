@@ -1,4 +1,4 @@
-public class Player2Move implements IGameState
+public class Player2Move implements IGameState, IMove
 {
     private GameBoard gameBoard;
     
@@ -14,7 +14,10 @@ public class Player2Move implements IGameState
     public void initGame()
     {
     }
-    
+    public String getSymbol()
+    {
+        return "O";
+    }
     public void switchPlayer()
     {
         gameBoard.setState(GameState.Player1Move);

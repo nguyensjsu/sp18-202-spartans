@@ -19,6 +19,7 @@ public class Player1Win implements IGameState
     public void switchPlayer()
     {
     }
+   
     
     public void endGame(boolean hasWon)
     {

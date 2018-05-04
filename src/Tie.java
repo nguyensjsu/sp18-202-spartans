@@ -18,7 +18,7 @@ public class Tie implements IGameState
     public void switchPlayer()
     {
     }
-    
+
     public void endGame(boolean hasWon)
     {
     }
