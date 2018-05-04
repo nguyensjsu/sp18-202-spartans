@@ -22,11 +22,15 @@ public class GameBoard extends JPanel implements GameSubject
     private IGameState player1Win;
     private IGameState player2Win;
     private IGameState tie;
-
-    int numMoves = 0 ;
-    int maxMoves = 0;
-    ArrayList<GameObserver> observers;
-    JButton buttons[] = new JButton[9];
+    
+    private int numMoves = 0 ;
+    private int maxMoves = 0;
+    private int[] board;
+    private int[] start;
+    private int[] increment;
+    private int size;
+    private ArrayList<GameObserver> observers;
+    private JButton buttons[];
     
     /**
      * Constructor for objects of class GameBoard
@@ -34,6 +38,7 @@ public class GameBoard extends JPanel implements GameSubject
     public GameBoard(int size)
     {
         // initialise instance variables
+        this.size = size;
         newGame = new NewGame(this);
         resume = new Resume(this);
         player1Move = new Player1Move(this);
@@ -42,17 +47,63 @@ public class GameBoard extends JPanel implements GameSubject
         player2Win = new Player2Win(this);
         tie = new Tie(this);
         currentState = player1Move;
-        
-        maxMoves = size*size;
+
+        setUpBoard();
         setLayout(new GridLayout(size,size));
         initializebuttons(); 
     }
+    
+    public void setUpBoard()
+    {
+        maxMoves = size*size;
+
+        board = new int[maxMoves];
+        // number of possible way to win the game
+        start = new int[size*2+2];
+        increment = new int[size*2+2];
+        
+        for (int i = 0; i < board.length; i++)
+        {
+            board[i] = 0;
+        }
+        
+        // setup int[] start
+        for (int i = 0 ; i < size; i++)
+        {
+            start[i] = i * size;
+        }
+        
+        for (int i = size; i < size * 2; i++)
+        {
+            start[i] = i - size;
+        }
+        
+        start[start.length - 2] = 0;
+        start[start.length - 1] = size - 1;
+        
+        // setup int[] increment
+         for (int i = 0 ; i < size; i++)
+        {
+            increment[i] = 1;
+        }       
+        
+        for (int i = size; i < size * 2; i++)
+        {
+            increment[i] = size;
+        }
+        
+        increment[increment.length - 2] = size + 1;
+        increment[increment.length - 1] = size - 1;
+    }
+    
     public void initializebuttons()
     {
-        for(int i = 0; i <= 8; i++)
+        buttons = new JButton[maxMoves];
+        for(int i = 0; i < maxMoves; i++)
         {
             buttons[i] = new JButton();
             buttons[i].setText("");
+            buttons[i].setName(Integer.toString(i));
             buttons[i].addActionListener(new buttonListener());
             
             add(buttons[i]); //adds this button to JPanel (note: no need for JPanel.add(...)
@@ -66,14 +117,29 @@ public class GameBoard extends JPanel implements GameSubject
         {
             
             JButton buttonClicked = (JButton)e.getSource(); //get the particular button that was clicked
+            if (currentState != player1Move && currentState != player2Move)
+                return;
             if (checkMove(buttonClicked.getText()))
             {
-                buttonClicked.setText(((IMove)currentState).getSymbol());
+                String symbol = ((IMove)currentState).getSymbol();
+                int position = Integer.parseInt(((JButton)e.getSource()).getName());
+                buttonClicked.setText(symbol);
+                if ( symbol.equals("X") )
+                    board[position] = 1;
+                else
+                    board[position] = -1;
                 numMoves++;
+                
                 if (checkWin())
+                {
                     currentState.endGame(true);
+                    System.out.println(currentState.getStateDisplay());
+                }
                 else if(numMoves >= maxMoves)
+                {
                     currentState.endGame(false);
+                    System.out.println(currentState.getStateDisplay());
+                }
                 else
                     currentState.switchPlayer();
             }
@@ -142,7 +208,17 @@ public class GameBoard extends JPanel implements GameSubject
 
     public boolean checkWin()
     {
-        boolean result = false;
-        return result;
+        int sum = 0;
+        for (int i = 0; i < start.length; i++)
+        {
+            sum = 0;
+            for (int j = 0; j < size; j++)
+            {
+                sum += board[start[i] + j * increment[i]];
+            }
+            if (Math.abs(sum) == size)
+              return true;
+        }
+        return false;
     }
 }

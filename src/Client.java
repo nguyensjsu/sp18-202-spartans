@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.*;
+
 /**
  * Write a description of class Client here.
  *
@@ -11,7 +13,7 @@ public class Client
     {
         JFrame window = new JFrame("Tic-Tac-Toe");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.getContentPane().add(new GameBoard(3));
+        window.getContentPane().add(new GameBoard(5));
         window.setBounds(300,200,300,300);
         window.setVisible(true);
     }
