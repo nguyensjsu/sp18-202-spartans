@@ -6,6 +6,10 @@ import javax.swing.*;
 
 
 public class OptionsPanel extends JPanel {
+
+  private boolean isSmallboard = true;
+  private boolean isMultiPlayer = true;
+
   public OptionsPanel() {
     JRadioButton threeXThree = new JRadioButton("3x3");
     JRadioButton fourXFour = new JRadioButton("4x4");
@@ -28,6 +32,7 @@ public class OptionsPanel extends JPanel {
       public void itemStateChanged(ItemEvent event) {
         int state = event.getStateChange();
         if (state == ItemEvent.SELECTED) {
+          isSmallboard = true;
           singlePlayer.setEnabled(true);
         }
       }
@@ -38,8 +43,29 @@ public class OptionsPanel extends JPanel {
       public void itemStateChanged(ItemEvent event) {
         int state = event.getStateChange();
         if (state == ItemEvent.SELECTED) {
+          isSmallboard = false;
           multiPlayer.setSelected(true);
           singlePlayer.setEnabled(false);
+        }
+      }
+    });
+
+    multiPlayer.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent event) {
+        int state = event.getStateChange();
+        if (state == ItemEvent.SELECTED) {
+          isMultiPlayer = true;
+        }
+      }
+    });
+
+    singlePlayer.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent event) {
+        int state = event.getStateChange();
+        if (state == ItemEvent.SELECTED) {
+          isMultiPlayer = false;
         }
       }
     });
@@ -49,16 +75,7 @@ public class OptionsPanel extends JPanel {
     startGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
-        JFrame window = new JFrame("Tic-Tac-Toe");
-        // window.getContentPane().setLayout(new GridLayout(2,1));
-        GameBoard newBoard = new GameBoard(3);
-        GameMonitor monitor = new GameMonitor(newBoard);
-        newBoard.attach(monitor);
-
-        window.getContentPane().add(monitor, BorderLayout.PAGE_START);
-        window.getContentPane().add(newBoard, BorderLayout.CENTER);
-        window.setBounds(300,200,300,300);
-        window.setVisible(true);
+        startGame();
       }
     });
 
@@ -91,5 +108,32 @@ public class OptionsPanel extends JPanel {
     gbc.gridwidth = 2;
     this.add(startGameButton, gbc);
 
+  }
+
+  private void startGame() {
+    if (isSmallboard) {
+      JFrame window = new JFrame("Tic-Tac-Toe");
+      // window.getContentPane().setLayout(new GridLayout(2,1));
+      GameBoard newBoard = new GameBoard(3);
+      GameMonitor monitor = new GameMonitor(newBoard);
+      newBoard.attach(monitor);
+
+      window.getContentPane().add(monitor, BorderLayout.PAGE_START);
+      window.getContentPane().add(newBoard, BorderLayout.CENTER);
+      window.setBounds(300,200,300,300);
+      window.setVisible(true);
+    }
+    else {
+      JFrame window = new JFrame("Tic-Tac-Toe");
+      // window.getContentPane().setLayout(new GridLayout(2,1));
+      GameBoard newBoard = new GameBoard(4);
+      GameMonitor monitor = new GameMonitor(newBoard);
+      newBoard.attach(monitor);
+
+      window.getContentPane().add(monitor, BorderLayout.PAGE_START);
+      window.getContentPane().add(newBoard, BorderLayout.CENTER);
+      window.setBounds(300,200,300,300);
+      window.setVisible(true);
+    }
   }
 }
