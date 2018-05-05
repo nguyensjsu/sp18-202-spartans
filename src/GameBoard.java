@@ -50,6 +50,7 @@ public class GameBoard extends JPanel implements GameSubject
 
         setUpBoard();
         setLayout(new GridLayout(size,size));
+        observers = new ArrayList();
         initializebuttons(); 
     }
     
@@ -143,7 +144,7 @@ public class GameBoard extends JPanel implements GameSubject
                 else
                     currentState.switchPlayer();
             }
-            
+            notifyObs();
         }
     }
     
