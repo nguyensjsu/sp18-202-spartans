@@ -1,5 +1,15 @@
-public class PlayerStrategy implements GameStrategy {
-  public void buttonClickHandler(JButton buttonClicked, IGameState currentState) {
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
-  }
+public class PlayerStrategy extends GameStrategy
+{
+    public PlayerStrategy(GameBoard gameBoard)
+    {
+        super(gameBoard);
+    }
+    
+    public void predict()
+    {
+    }
 }

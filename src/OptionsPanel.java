@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.*;
 import javax.swing.*;
 
-
 public class OptionsPanel extends JPanel {
 
   private boolean isSmallboard = true;
@@ -111,24 +110,29 @@ public class OptionsPanel extends JPanel {
   }
 
   private void startGame() {
-    JFrame window = new JFrame("Tic-Tac-Toe");
-    GameBoard newBoard;
     if (isSmallboard) {
-      if (isMultiPlayer)
-        newBoard = new GameBoard(3, new PlayerStrategy());
-      else
-        newBoard = new GameBoard(3, new AIStrategy());
+      JFrame window = new JFrame("Tic-Tac-Toe");
+      // window.getContentPane().setLayout(new GridLayout(2,1));
+      GameBoard newBoard = new GameBoard(3, isMultiPlayer);
+      GameMonitor monitor = new GameMonitor(newBoard);
+      newBoard.attach(monitor);
+
+      window.getContentPane().add(monitor, BorderLayout.PAGE_START);
+      window.getContentPane().add(newBoard, BorderLayout.CENTER);
+      window.setBounds(300,200,300,300);
+      window.setVisible(true);
     }
     else {
-      newBoard = new GameBoard(4, new PlayerStrategy());
+      JFrame window = new JFrame("Tic-Tac-Toe");
+      // window.getContentPane().setLayout(new GridLayout(2,1));
+      GameBoard newBoard = new GameBoard(4, isMultiPlayer);
+      GameMonitor monitor = new GameMonitor(newBoard);
+      newBoard.attach(monitor);
+
+      window.getContentPane().add(monitor, BorderLayout.PAGE_START);
+      window.getContentPane().add(newBoard, BorderLayout.CENTER);
+      window.setBounds(300,200,300,300);
+      window.setVisible(true);
     }
-    GameMonitor monitor = new GameMonitor(newBoard);
-
-    newBoard.attach(monitor);
-
-    window.getContentPane().add(monitor, BorderLayout.PAGE_START);
-    window.getContentPane().add(newBoard, BorderLayout.CENTER);
-    window.setBounds(300,200,300,300);
-    window.setVisible(true);
   }
 }
