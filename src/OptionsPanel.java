@@ -114,10 +114,13 @@ public class OptionsPanel extends JPanel {
     JFrame window = new JFrame("Tic-Tac-Toe");
     GameBoard newBoard;
     if (isSmallboard) {
-      newBoard = new GameBoard(3);
+      if (isMultiPlayer)
+        newBoard = new GameBoard(3, new PlayerStrategy());
+      else
+        newBoard = new GameBoard(3, new AIStrategy());
     }
     else {
-      newBoard = new GameBoard(4);
+      newBoard = new GameBoard(4, new PlayerStrategy());
     }
     GameMonitor monitor = new GameMonitor(newBoard);
 
