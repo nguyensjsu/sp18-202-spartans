@@ -1,9 +1,10 @@
-public class Player2Move implements IGameState, IMove
+public class Player2Move extends PlayerDecorator implements IGameState, IMove
 {
     private GameBoard gameBoard;
     
-    public Player2Move(GameBoard gameBoard)
+    public Player2Move(GameBoard gameBoard, IPlayer p)
     {
+        super(p);
         this.gameBoard = gameBoard;
     }
     
@@ -33,6 +34,11 @@ public class Player2Move implements IGameState, IMove
     
     public String getStateDisplay()
     {
-        return "Turn: Player 2 (O)";
+        return addedString(super.getStateDisplay());
+    }
+    
+    public String addedString(String s)
+    {
+        return s + "2's move";
     }
 }

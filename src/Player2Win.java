@@ -1,9 +1,10 @@
-public class Player2Win implements IGameState
+public class Player2Win extends PlayerDecorator implements IGameState
 {
     private GameBoard gameBoard;
     
-    public Player2Win(GameBoard gameBoard)
+    public Player2Win(GameBoard gameBoard, IPlayer p)
     {
+        super(p);
         this.gameBoard = gameBoard;
     }
     
@@ -26,6 +27,11 @@ public class Player2Win implements IGameState
     
     public String getStateDisplay()
     {
-        return "Player 2 win!!!";
+        return addedString(super.getStateDisplay());
+    }
+    
+    public String addedString(String s)
+    {
+        return s + "2 win";
     }
 }

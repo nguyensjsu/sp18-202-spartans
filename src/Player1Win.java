@@ -1,10 +1,12 @@
-public class Player1Win implements IGameState
+public class Player1Win extends PlayerDecorator implements IGameState
 {
     private GameBoard gameBoard;
     
-    public Player1Win(GameBoard gameBoard)
+    public Player1Win(GameBoard gameBoard, IPlayer p)
     {
+        super(p);
         this.gameBoard = gameBoard;
+       
     }
     
     public void resume()
@@ -27,6 +29,11 @@ public class Player1Win implements IGameState
     
     public String getStateDisplay()
     {
-        return "Player 1 win!!!";
+        return addedString(super.getStateDisplay());
+    }
+    
+    public String addedString(String s)
+    {
+        return s + "1 win";
     }
 }
