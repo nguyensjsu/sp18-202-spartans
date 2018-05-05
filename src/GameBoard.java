@@ -17,6 +17,7 @@ public class GameBoard extends JPanel implements GameSubject
     private IGameState currentState;
     private IGameState newGame;
     private IGameState resume;
+    private IPlayer player;
     private IGameState player1Move;
     private IGameState player2Move;
     private IGameState player1Win;
@@ -31,7 +32,6 @@ public class GameBoard extends JPanel implements GameSubject
     private int size;
     private ArrayList<GameObserver> observers;
     private JButton buttons[];
-    private BoardSizeStrategy strategy;
     private GameStrategy moveStrategy;
     private boolean isMultiPlayer;
 
@@ -45,10 +45,11 @@ public class GameBoard extends JPanel implements GameSubject
         this.size = size;
         newGame = new NewGame(this);
         resume = new Resume(this);
-        player1Move = new Player1Move(this);
-        player2Move = new Player2Move(this);
-        player1Win = new Player1Win(this);
-        player2Win = new Player2Win(this);
+        player = new Player();
+        player1Move = new Player1Move(this, player);
+        player2Move = new Player2Move(this, player);
+        player1Win = new Player1Win(this, player);
+        player2Win = new Player2Win(this, player);
         tie = new Tie(this);
         currentState = player1Move;
 
@@ -57,7 +58,7 @@ public class GameBoard extends JPanel implements GameSubject
         observers = new ArrayList();
         initializebuttons();
     }
-    
+
     public void setUpBoard()
     {
         maxMoves = size*size;
@@ -109,7 +110,7 @@ public class GameBoard extends JPanel implements GameSubject
             buttons[i] = new JButton();
             buttons[i].setText("");
             buttons[i].setName(Integer.toString(i));
-            if ((!isMultiPlayer) && size == 3)            
+            if ((!isMultiPlayer) && size == 3)
                 buttons[i].addActionListener(new AIStrategy(this));
             else
                 buttons[i].addActionListener(new PlayerStrategy(this));
@@ -228,7 +229,7 @@ public class GameBoard extends JPanel implements GameSubject
         }
         return false;
     }
-    
+
     public String getCurrMoves()
     {
         String currMoves = "";
@@ -238,37 +239,37 @@ public class GameBoard extends JPanel implements GameSubject
         }
         return currMoves.trim();
     }
-    
+
     public void setBoard(int index, int value)
     {
         board[index] = value;
     }
-    
+
     public void increNumMoves()
     {
         numMoves++;
     }
-    
+
     public int getNumMoves()
     {
         return numMoves;
     }
-    
+
     public int getMaxMoves()
     {
         return maxMoves;
     }
-    
+
     public JButton getButton(int index)
     {
         return buttons[index];
     }
-    
+
     public boolean isMoveableState()
     {
         if ( currentState == player1Move || currentState == player2Move )
             return true;
-            
+
         return false;
     }
 }
