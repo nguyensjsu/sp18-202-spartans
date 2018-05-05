@@ -32,14 +32,16 @@ public class GameBoard extends JPanel implements GameSubject
     private int size;
     private ArrayList<GameObserver> observers;
     private JButton buttons[];
-    private BoardSizeStrategy strategy;
+    private GameStrategy moveStrategy;
+    private boolean isMultiPlayer;
 
     /**
      * Constructor for objects of class GameBoard
      */
-    public GameBoard(int size)
+    public GameBoard(int size, boolean isMultiPlayer)
     {
         // initialise instance variables
+        this.isMultiPlayer = isMultiPlayer;
         this.size = size;
         newGame = new NewGame(this);
         resume = new Resume(this);
@@ -108,13 +110,15 @@ public class GameBoard extends JPanel implements GameSubject
             buttons[i] = new JButton();
             buttons[i].setText("");
             buttons[i].setName(Integer.toString(i));
-            buttons[i].addActionListener(new buttonListener());
-
+            if ((!isMultiPlayer) && size == 3)
+                buttons[i].addActionListener(new AIStrategy(this));
+            else
+                buttons[i].addActionListener(new PlayerStrategy(this));
             add(buttons[i]); //adds this button to JPanel (note: no need for JPanel.add(...)
                                 //because this whole class is a JPanel already
         }
     }
-
+/*
       private class buttonListener implements ActionListener
     {
           public void actionPerformed(ActionEvent e)
@@ -150,7 +154,7 @@ public class GameBoard extends JPanel implements GameSubject
             notifyObs();
         }
     }
-
+*/
     public void setState(GameState aState)
     {
         switch(aState)
@@ -223,6 +227,49 @@ public class GameBoard extends JPanel implements GameSubject
             if (Math.abs(sum) == size)
               return true;
         }
+        return false;
+    }
+
+    public String getCurrMoves()
+    {
+        String currMoves = "";
+        for (int i=0; i < board.length; i++)
+        {
+            currMoves += board[i] + " ";
+        }
+        return currMoves.trim();
+    }
+
+    public void setBoard(int index, int value)
+    {
+        board[index] = value;
+    }
+
+    public void increNumMoves()
+    {
+        numMoves++;
+    }
+
+    public int getNumMoves()
+    {
+        return numMoves;
+    }
+
+    public int getMaxMoves()
+    {
+        return maxMoves;
+    }
+
+    public JButton getButton(int index)
+    {
+        return buttons[index];
+    }
+
+    public boolean isMoveableState()
+    {
+        if ( currentState == player1Move || currentState == player2Move )
+            return true;
+
         return false;
     }
 }
