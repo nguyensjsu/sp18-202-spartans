@@ -22,7 +22,7 @@ public class GameBoard extends JPanel implements GameSubject
     private IGameState player1Win;
     private IGameState player2Win;
     private IGameState tie;
-    
+
     private int numMoves = 0 ;
     private int maxMoves = 0;
     private int[] board;
@@ -31,7 +31,8 @@ public class GameBoard extends JPanel implements GameSubject
     private int size;
     private ArrayList<GameObserver> observers;
     private JButton buttons[];
-    
+    private BoardSizeStrategy strategy;
+
     /**
      * Constructor for objects of class GameBoard
      */
@@ -51,9 +52,9 @@ public class GameBoard extends JPanel implements GameSubject
         setUpBoard();
         setLayout(new GridLayout(size,size));
         observers = new ArrayList();
-        initializebuttons(); 
+        initializebuttons();
     }
-    
+
     public void setUpBoard()
     {
         maxMoves = size*size;
@@ -62,41 +63,41 @@ public class GameBoard extends JPanel implements GameSubject
         // number of possible way to win the game
         start = new int[size*2+2];
         increment = new int[size*2+2];
-        
+
         for (int i = 0; i < board.length; i++)
         {
             board[i] = 0;
         }
-        
+
         // setup int[] start
         for (int i = 0 ; i < size; i++)
         {
             start[i] = i * size;
         }
-        
+
         for (int i = size; i < size * 2; i++)
         {
             start[i] = i - size;
         }
-        
+
         start[start.length - 2] = 0;
         start[start.length - 1] = size - 1;
-        
+
         // setup int[] increment
          for (int i = 0 ; i < size; i++)
         {
             increment[i] = 1;
-        }       
-        
+        }
+
         for (int i = size; i < size * 2; i++)
         {
             increment[i] = size;
         }
-        
+
         increment[increment.length - 2] = size + 1;
         increment[increment.length - 1] = size - 1;
     }
-    
+
     public void initializebuttons()
     {
         buttons = new JButton[maxMoves];
@@ -106,17 +107,17 @@ public class GameBoard extends JPanel implements GameSubject
             buttons[i].setText("");
             buttons[i].setName(Integer.toString(i));
             buttons[i].addActionListener(new buttonListener());
-            
+
             add(buttons[i]); //adds this button to JPanel (note: no need for JPanel.add(...)
-                                //because this whole class is a JPanel already           
+                                //because this whole class is a JPanel already
         }
     }
-    
+
       private class buttonListener implements ActionListener
     {
-          public void actionPerformed(ActionEvent e) 
+          public void actionPerformed(ActionEvent e)
         {
-            
+
             JButton buttonClicked = (JButton)e.getSource(); //get the particular button that was clicked
             if (currentState != player1Move && currentState != player2Move)
                 return;
@@ -130,7 +131,7 @@ public class GameBoard extends JPanel implements GameSubject
                 else
                     board[position] = -1;
                 numMoves++;
-                
+
                 if (checkWin())
                 {
                     currentState.endGame(true);
@@ -147,7 +148,7 @@ public class GameBoard extends JPanel implements GameSubject
             notifyObs();
         }
     }
-    
+
     public void setState(GameState aState)
     {
         switch(aState)
